@@ -1,0 +1,9 @@
+{
+  "name": "reactjs-api-crud",
+  "version": "1.0.0",
+  "description": "Reactjs front-end and API to CRUD on MYSQL database",
+  "main": "index.js",
+  "repository": "git@github.com:adaolima/reactjs-api-crud.git",
+  "author": "Adao Lima <adaoolima@gmail.com>",
+  "license": "MIT"
+}
