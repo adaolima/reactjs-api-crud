@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import New from "./pages/New";
+import Register from "./pages/Register";
 import NotFound from "./pages/404";
 
 export default function Routes() {
@@ -12,7 +12,7 @@ export default function Routes() {
       <Switch>
         <Route path="/" exact component={Login} />
         <Route path="/dashboard" exact component={Dashboard} />
-        <Route path="/new" exact component={New} />
+        <Route path="/register" exact component={Register} />
         <Route component={NotFound} />
       </Switch>
     </BrowserRouter>
