@@ -1,0 +1,11 @@
+{
+  "development": {
+    "username": "admin_api",
+    "password": "123_api",
+    "database": "usersdb",
+    "host": "127.0.0.1",
+    "post": 3306,
+    "dialect": "mysql",
+    "operatorsAliases": false
+  }
+}
