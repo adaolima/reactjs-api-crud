@@ -2,7 +2,7 @@
 
 Reactjs front-end to connect by api to do CRUD on MYSQL database - Application test for Gazeta do Povo
 
-#RUN API
+# RUN API AND FRONT
 
 ## Building and running on localhost
 
@@ -49,3 +49,17 @@ yarn serve
 # API CRUD
 
 [GET , POST , PUT, DELETE] => YOUR_HOST + API_PORT + '/api/v1/users'
+
+# RUN FRONT-END
+
+Install dependencies
+
+```sh
+yarn install
+```
+
+Run aplication
+
+```sh
+yarn start
+```
