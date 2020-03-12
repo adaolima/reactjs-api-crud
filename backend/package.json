@@ -4,8 +4,7 @@
   "description": "API para CRUD em banco de dados em  MySQL",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./server.js",
-    "sequelize": "node_modules/.bin/sequelize"
+    "serve": "nodemon ./server.js"
   },
   "keywords": [
     "api",
