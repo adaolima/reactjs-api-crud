@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const logger = require("morgan");
+const cors = require("cors");
+const routes = require("./routes");
 
 const http = require("http");
 
@@ -8,9 +10,23 @@ const app = express();
 
 app.use(logger("dev"));
 
+app.use(cors());
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: false }));
+
+//Models
+var models = require("./models");
+//Sync Database
+models.sequelize
+  .sync()
+  .then(function() {
+    console.log("Nice! Database looks fine");
+  })
+  .catch(function(err) {
+    console.log(err, "Something went wrong with the Database Update!");
+  });
+
+app.use(routes);
 
 app.get("*", (req, res) => {
   res.status(200).send({
