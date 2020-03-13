@@ -1,18 +1,21 @@
 require("dotenv").config();
 const express = require("express");
-const logger = require("morgan");
+// const logger = require("morgan");
 const cors = require("cors");
+const AuthMiddleware = require("./middleware/auth-middleware");
 const routes = require("./routes");
 
 const http = require("http");
 
 const app = express();
 
-app.use(logger("dev"));
+app.use(express.logger("dev"));
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.cookieParser());
+app.use(AuthMiddleware);
 
 //Models
 var models = require("./models");
