@@ -15,20 +15,12 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-        validate: {
-          isEmail: true,
-          is: ["^([a-zA-Z0-9_-.]+)@([a-zA-Z0-9_-.]+).([a-zA-Z]{2,5})$", "i"]
-        }
+        unique: true
       },
       phone: { type: DataTypes.STRING, allowNull: false },
       birth_date: {
         type: DataTypes.DATEONLY,
-        allowNull: false,
-        validade: {
-          isDate: true,
-          isBefore: new Date(Date.now()).toISOString().split("T")[0]
-        }
+        allowNull: false
       },
       cpf: {
         type: DataTypes.STRING,
@@ -63,6 +55,10 @@ module.exports = (sequelize, DataTypes) => {
     user.password = hashedPassword;
   });
 
+  // User.afterCreate(async (user, options) => {
+  //   user.authorize();
+  // });
+
   User.associate = function(models) {
     User.hasMany(models.AuthToken);
   };
@@ -70,10 +66,11 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.authorize = async function() {
     const { AuthToken } = sequelize.models;
     const user = this;
+    const userId = this.user_id;
+    AuthToken.destroy({ where: { user_id: userId } });
 
-    const authToken = await AuthToken.generate(this.user_id);
+    const authToken = await AuthToken.generate(userId);
     await user.addAuthToken(authToken);
-
     return { user, authToken };
   };
 
