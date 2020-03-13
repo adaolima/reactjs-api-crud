@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models").User;
+const AuthToken = require("../models").AuthToken;
 const JsonError = require("../utils/JsonError");
 
 module.exports = {
@@ -18,16 +19,22 @@ module.exports = {
   async create(req, res) {
     try {
       const { full_name, email, phone, cpf, birth_date, password } = req.body;
-      const addUser = await User.create({
-        full_name,
-        email,
-        phone,
-        cpf,
-        birth_date,
-        password
-      });
-      res.status(201);
-      return res.json(addUser);
+      const findEmail = await User.findOne({ where: { email } });
+      if (!findEmail) {
+        const addUser = await User.create({
+          full_name,
+          email,
+          phone,
+          cpf,
+          birth_date,
+          password
+        });
+        res.status(201);
+        addUser.authorize();
+        return res.json(addUser);
+      } else {
+        res.json("Usuário já existente");
+      }
     } catch (error) {
       res.status(500);
       res.json(JsonError(req, res, "Não foi possível criar o usuário"));
@@ -77,7 +84,7 @@ module.exports = {
     try {
       if (findEmail) {
         if (bcrypt.compareSync(password, findEmail.password)) {
-          findEmail = await findEmail.authorize();
+          findEmail.authorize();
           res.json(findEmail);
         } else {
           res.status(400);
@@ -95,7 +102,6 @@ module.exports = {
 
   //logout
   async logout(req, res) {
-    // console.log(req);
     const {
       user,
       cookies: { auth_token: authToken }
