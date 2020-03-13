@@ -6,12 +6,22 @@ module.exports = (sequelize, DataTypes) => {
   const AuthToken = sequelize.define(
     "AuthToken",
     {
-      token: { type: DataTypes.STRING, allowNull: false }
+      token: { type: DataTypes.STRING, allowNull: false },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: "User",
+        referenceKey: "user_id"
+      }
     },
     {}
   );
-  AuthToken.associate = function({ User }) {
-    AuthToken.belongsTo(User);
+  AuthToken.associate = function(models) {
+    AuthToken.belongsTo(models.User, {
+      foreignKey: "user_id",
+      unique: true,
+      onDelete: "CASCADE"
+    });
   };
 
   AuthToken.generate = async function(UserId) {
@@ -22,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       expiresIn: "1h"
     });
 
-    return AuthToken.create({ token, UserId });
+    return AuthToken.create({ token, user_id: UserId });
   };
 
   return AuthToken;
