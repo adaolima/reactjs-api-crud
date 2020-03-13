@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const User = require("../models").User;
 const JsonError = require("../utils/JsonError");
 
@@ -58,7 +59,7 @@ module.exports = {
     try {
       const userSelected = await User.findOne({ where: { user_id } });
       if (userSelected) {
-        await user.destroy();
+        await userSelected.destroy();
         res.json({ status: "200", message: "Usuário deletado com sucesso" });
       } else {
         res.status(404);
@@ -68,5 +69,41 @@ module.exports = {
       res.status(500);
       res.json(JsonError(req, res, "Não foi possível deletar o usuário"));
     }
+  },
+  //login
+  async authenticate(req, res) {
+    const { email, password } = req.body;
+    const findEmail = await User.findOne({ where: { email } });
+    try {
+      if (findEmail) {
+        if (bcrypt.compareSync(password, findEmail.password)) {
+          findEmail = await findEmail.authorize();
+          res.json(findEmail);
+        } else {
+          res.status(400);
+          res.json(JsonError(req, res, "Senha incorreta."));
+        }
+      } else {
+        res.status(400);
+        res.json(JsonError(req, res, "Usuário não encontrado."));
+      }
+    } catch (error) {
+      res.status(500);
+      res.json(JsonError(req, res, "Não foi autenticar o usuário."));
+    }
+  },
+
+  //logout
+  async logout(req, res) {
+    // console.log(req);
+    const {
+      user,
+      cookies: { auth_token: authToken }
+    } = req;
+    if (user && authToken) {
+      await req.user.logout(authToken);
+      res.status(204).send();
+    }
+    res.status(400).send({ errors: [{ message: "Não autenticado" }] });
   }
 };
