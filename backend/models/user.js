@@ -37,14 +37,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       freezeTableName: true
-      // instanceMethods: {
-      //   generateHash: function(password) {
-      //     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
-      //   },
-      //   validPassword: function (password) {
-      //     return bcrypt.compareSync(password, this.password)
-      //   }
-      // }
     }
   );
   User.beforeCreate(async (user, options) => {
@@ -54,10 +46,6 @@ module.exports = (sequelize, DataTypes) => {
     );
     user.password = hashedPassword;
   });
-
-  // User.afterCreate(async (user, options) => {
-  //   user.authorize();
-  // });
 
   User.associate = function(models) {
     User.hasMany(models.AuthToken);
